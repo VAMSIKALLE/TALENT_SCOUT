@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TalentScout — Resume Intake & Role-Fit Analyzer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <!-- Header & Top Page Navigation Menu -->
+  <header class="navbar">
+    <div class="logo-group">
+      <div class="logo-icon">TS</div>
+      <div>
+        <h1>TalentScout</h1>
+        <span class="tagline">Resume Intake & Role-Fit Analyzer</span>
+      </div>
+    </div>
+    
+    <nav class="nav-tabs">
+      <button class="nav-tab active" onclick="switchPage('about')">ℹ About Project</button>
+      <button class="nav-tab" onclick="switchPage('upload')">⬆ Upload & Candidates</button>
+      <button class="nav-tab" onclick="switchPage('analysis')">🔍 Role Analysis</button>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <!-- PAGE 1: About Project Details -->
+    <section id="page-about" class="page-view active">
+      <div class="hero-card">
+        <h2>Intelligent Resume Intake & Skill Matching Platform</h2>
+        <p>
+          TalentScout simplifies the hiring workflow by automating candidate intake and skill verification. 
+          The application allows talent acquisition teams to upload candidate resumes, extract candidate technical skills, score role compatibility, and export structured recruitment reports.
+        </p>
+      </div>
+
+      <div class="workflow-card">
+        <div class="workflow-header">
+          <h3>TalentScout Architecture & Workflow</h3>
+          <p>The system operates across three primary stages of the recruitment lifecycle.</p>
+        </div>
+        
+        <div class="stepper-grid">
+          <div class="step-box">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Resume Parsing</h4>
+              <p>Parses uploaded PDF resumes to extract name, contact details, experience, and key technical skills.</p>
+            </div>
+          </div>
+          
+          <div class="step-box">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Role Scoring Engine</h4>
+              <p>Compares candidate skill profiles against defined target roles (e.g. Python Full Stack) to compute percentage match scores.</p>
+            </div>
+          </div>
+          
+          <div class="step-box">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Structured PDF Export</h4>
+              <p>Generates actionable top-candidate candidate summary reports ready for download.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 24px;">
+        <button class="btn btn-primary" onclick="switchPage('upload')">Proceed to Upload Resumes ❯</button>
+      </div>
+    </section>
+
+    <!-- PAGE 2: Upload Resumes & View Candidates -->
+    <section id="page-upload" class="page-view">
+      <div class="toolbar">
+        <div class="action-btns">
+          <label for="resume-input" class="btn btn-primary">⬆ Upload Resumes (PDF)</label>
+          <input type="file" id="resume-input" multiple accept=".pdf" style="display: none;">
+          <button class="btn btn-secondary" onclick="clearAll()">🗑 Clear All</button>
+        </div>
+        <span id="counter-badge" class="counter-badge">0 candidate(s) loaded</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Contact</th>
+              <th>Extracted Skills</th>
+              <th>Experience</th>
+            </tr>
+          </thead>
+          <tbody id="raw-table-body">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 48px;">
+                No candidates uploaded yet. Click "Upload Resumes (PDF)" above to add candidates.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="page-footer-nav">
+        <button class="btn btn-secondary" onclick="switchPage('about')">❮ Back to About</button>
+        <button class="btn btn-primary" onclick="switchPage('analysis')">Go to Role Analysis ❯</button>
+      </div>
+    </section>
+
+    <!-- PAGE 3: Role Analysis & Ranking Output -->
+    <section id="page-analysis" class="page-view">
+      <div class="summary-grid">
+        <div class="summary-card">
+          <span class="card-title">Loaded Candidates</span>
+          <span class="card-value" id="stat-total">0</span>
+        </div>
+        <div class="summary-card">
+          <span class="card-title">Top Match Candidate</span>
+          <span class="card-value" id="stat-top-name">—</span>
+        </div>
+        <div class="summary-card">
+          <span class="card-title">Highest Match Score</span>
+          <span class="card-value highlight" id="stat-top-score">0%</span>
+        </div>
+      </div>
+
+      <div class="controls-panel">
+        <div class="input-group">
+          <label for="role-input">Target Role:</label>
+          <input type="text" id="role-input" placeholder="e.g. Python Developer" value="Python Developer">
+        </div>
+
+        <div class="input-group">
+          <label for="top-n-select">Filter Scope:</label>
+          <select id="top-n-select">
+            <option value="5" selected>Top 5</option>
+            <option value="10">Top 10</option>
+            <option value="999">Show All</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" onclick="runAnalysis()">🔍 Analyze & Rank Fit</button>
+        <button class="btn btn-secondary" id="export-pdf-btn" onclick="exportPDF()" disabled>📄 Export to PDF</button>
+      </div>
+
+      <div class="table-wrapper" style="margin-top: 16px;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 100px;">Rank</th>
+              <th style="width: 220px;">Candidate</th>
+              <th style="width: 180px;">Role Fit</th>
+              <th>Matched Skills</th>
+              <th>Missing Skills</th>
+            </tr>
+          </thead>
+          <tbody id="analysis-table-body">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 48px;">
+                Enter target role and click "Analyze & Rank Fit" to view scored candidates.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="page-footer-nav">
+        <button class="btn btn-secondary" onclick="switchPage('upload')">❮ Back to Upload Page</button>
+      </div>
+    </section>
+
+    <!-- Processing / Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loader-card">
+        <div class="spinner"></div>
+        <h3>Parsing & Analyzing Resumes...</h3>
+        <p>Please wait while candidate skills are being extracted.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let activeCandidates = [];
+
+    function switchPage(pageId) {
+      document.querySelectorAll(".page-view").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".nav-tab").forEach(el => el.classList.remove("active"));
+
+      document.getElementById(`page-${pageId}`).classList.add("active");
+
+      const tabIndex = pageId === 'about' ? 0 : pageId === 'upload' ? 1 : 2;
+      document.querySelectorAll(".nav-tab")[tabIndex].classList.add("active");
+    }
+
+    // Single Upload Event Listener with Loading Overlay Logic
+    document.getElementById("resume-input").addEventListener("change", async (e) => {
+      const files = e.target.files;
+      if (!files || !files.length) return;
+
+      // Show Loading Spinner Overlay
+      document.getElementById("loading-overlay").classList.add("active");
+
+      const formData = new FormData();
+      for (let file of files) {
+        formData.append("files", file);
+      }
+
+      try {
+        const res = await fetch("/api/upload", { method: "POST", body: formData });
+        const data = await res.json();
+
+        if (data.candidates) {
+          activeCandidates = data.candidates;
+          renderRawTable(activeCandidates);
+          document.getElementById("counter-badge").innerText = `${data.total} candidate(s) loaded`;
+          document.getElementById("stat-total").innerText = data.total;
+        }
+      } catch (err) {
+        alert("An error occurred while parsing resumes.");
+      } finally {
+        // Hide Loading Spinner Overlay and reset input
+        document.getElementById("loading-overlay").classList.remove("active");
+        e.target.value = "";
+      }
+    });
+
+    function renderRawTable(candidates) {
+      const tbody = document.getElementById("raw-table-body");
+      if (!candidates.length) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No candidates loaded.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = candidates.map(c => `
+        <tr>
+          <td><strong>${c.name}</strong></td>
+          <td>${c.email}</td>
+          <td>${c.phone}</td>
+          <td>${(c.skills || []).map(s => `<span class="badge-tag badge-neutral">${s}</span>`).join(" ")}</td>
+          <td>${c.experience}</td>
+        </tr>
+      `).join("");
+    }
+
+    async function runAnalysis() {
+      const role = document.getElementById("role-input").value;
+      const topN = parseInt(document.getElementById("top-n-select").value);
+
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role, top_n: topN })
+      });
+
+      const data = await res.json();
+      if (data.error) {
+        alert(data.error);
+        return;
+      }
+
+      renderAnalyzedTable(data.results);
+      document.getElementById("export-pdf-btn").disabled = false;
+    }
+
+    function renderAnalyzedTable(results) {
+      const tbody = document.getElementById("analysis-table-body");
+
+      if (results.length > 0) {
+        document.getElementById("stat-top-name").innerText = results[0].name;
+        document.getElementById("stat-top-score").innerText = `${results[0].match_score}%`;
+      }
+
+      tbody.innerHTML = results.map((c, idx) => {
+        const isBest = idx === 0 && c.match_score > 0;
+        const rankLabel = isBest ? `<span class="badge-tag badge-gold">🏆 #1 Top</span>` : `#${idx + 1}`;
+        const rowClass = isBest ? "top-match" : "";
+
+        const matchedBadges = (c.matched_skills || []).map(s => `<span class="badge-tag badge-matched">✓ ${s}</span>`).join(" ");
+        const missingBadges = (c.missing_skills || []).map(s => `<span class="badge-tag badge-missing">✗ ${s}</span>`).join(" ");
+
+        return `
+          <tr class="${rowClass}">
+            <td><strong>${rankLabel}</strong></td>
+            <td>
+              <div style="font-weight: 700; color: var(--text-main);">${c.name}</div>
+              <div style="font-size: 12px; color: var(--text-muted);">${c.email}</div>
+            </td>
+            <td>
+              <div class="score-container">
+                <span class="score-value">${c.match_score}%</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: ${c.match_score}%;"></div>
+                </div>
+              </div>
+            </td>
+            <td>${matchedBadges || '<span style="color: var(--text-muted);">None</span>'}</td>
+            <td>${missingBadges || '<span style="color: var(--text-muted);">None</span>'}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function exportPDF() {
+      const role = document.getElementById("role-input").value;
+      const topN = parseInt(document.getElementById("top-n-select").value);
+
+      const res = await fetch("/api/export-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role, top_n: topN })
+      });
+
+      if (!res.ok) {
+        alert("Failed to generate PDF.");
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `TalentScout_${role.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_Top${topN}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    async function clearAll() {
+      await fetch("/api/clear", { method: "POST" });
+      activeCandidates = [];
+      renderRawTable([]);
+      document.getElementById("analysis-table-body").innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 48px;">Enter target role and click "Analyze & Rank Fit" to view scored candidates.</td></tr>`;
+      document.getElementById("counter-badge").innerText = "0 candidate(s) loaded";
+      document.getElementById("stat-total").innerText = "0";
+      document.getElementById("stat-top-name").innerText = "—";
+      document.getElementById("stat-top-score").innerText = "0%";
+      document.getElementById("export-pdf-btn").disabled = true;
+    }
+  </script>
+</body>
+</html>

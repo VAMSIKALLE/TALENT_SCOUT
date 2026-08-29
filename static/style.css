@@ -1,0 +1,447 @@
+/* Light Clean UI Theme with Multi-Page Views */
+:root {
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: #eff6ff;
+  --border-color: #e2e8f0;
+  --success: #16a34a;
+  --success-bg: #f0fdf4;
+  --danger: #dc2626;
+  --danger-bg: #fef2f2;
+  --gold-bg: #fef9c3;
+  --gold-text: #854d0e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navigation Header Tabs */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 36px;
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  background-color: var(--primary);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.logo-group h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.tagline {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-tab:hover {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+}
+
+.nav-tab.active {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary-light);
+}
+
+/* Page View Visibility Controller */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  width: 100%;
+}
+
+.page-view {
+  display: none;
+}
+
+.page-view.active {
+  display: block;
+}
+
+.page-footer-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+/* Project Info & Steppers */
+.hero-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.hero-card h2 {
+  font-size: 22px;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.hero-card p {
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.workflow-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.workflow-header h3 {
+  font-size: 18px;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.workflow-header p {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.stepper-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.step-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.step-num {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Summary Grid Cards */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.summary-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 16px 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.card-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-top: 4px;
+}
+
+.card-value.highlight {
+  color: var(--primary);
+}
+
+/* Toolbars & Controls */
+.toolbar, .controls-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-card);
+  padding: 16px 24px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 16px;
+}
+
+.action-btns {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: #e2e8f0;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+input[type="text"], select {
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+/* Table Output & Progress Bar */
+.table-wrapper {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+th {
+  background-color: #f1f5f9;
+  color: var(--text-main);
+  font-weight: 600;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+td {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main);
+  vertical-align: middle;
+}
+
+tr.top-match {
+  background-color: #f0fdf4;
+}
+
+.score-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.score-value {
+  font-weight: 700;
+  width: 42px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--success);
+  border-radius: 4px;
+}
+
+/* Skill Tag Badges */
+.badge-tag {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 2px;
+}
+
+.badge-neutral {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+.badge-matched {
+  background-color: var(--success-bg);
+  color: var(--success);
+  border: 1px solid #bbf7d0;
+}
+
+.badge-missing {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid #fecaca;
+}
+
+.badge-gold {
+  background-color: var(--gold-bg);
+  color: var(--gold-text);
+  border: 1px solid #fef08a;
+}
+/* Processing / Loading Overlay Styles */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.loading-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.loader-card {
+  background-color: #ffffff;
+  padding: 36px 48px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 400px;
+}
+
+.loader-card h3 {
+  font-size: 18px;
+  color: #0f172a;
+  margin-top: 16px;
+  margin-bottom: 6px;
+}
+
+.loader-card p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* Spinner Animation */
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #eff6ff;
+  border-top: 4px solid #2563eb;
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
