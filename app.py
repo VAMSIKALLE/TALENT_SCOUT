@@ -12,8 +12,11 @@ from pdf_export import export_candidates_to_pdf
 from exceptions import TalentScoutError
 
 app = Flask(__name__)
-app.config["UPLOAD_FOLDER"] = os.path.join(os.path.dirname(__file__), "uploads")
-app.config["OUTPUT_FOLDER"] = os.path.join(os.path.dirname(__file__), "outputs")
+
+# Vercel provides /tmp as writable temporary storage
+app.config["UPLOAD_FOLDER"] = "/tmp/talentscout_uploads"
+app.config["OUTPUT_FOLDER"] = "/tmp/talentscout_outputs"
+
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 os.makedirs(app.config["OUTPUT_FOLDER"], exist_ok=True)
 
